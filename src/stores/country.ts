@@ -5,7 +5,7 @@ export const useCountryStore = defineStore('country', {
 
   state: () => ({
     countries: [],
-    continents: []
+    selectedCountry: ""
   }),
 
   actions: {
@@ -20,6 +20,9 @@ export const useCountryStore = defineStore('country', {
       }catch(error){
         console.error(error)
       }
+    },
+    setSelectedCountry(countryName){
+      this.selectedCountry = countryName
     }
 },
 getters: {
@@ -31,7 +34,9 @@ getters: {
           capital: country.capital? country.capital[0]: 'N/A',
           population: country.population,
           area: country.area,
-          subregion: country.subregion
+          subregion: country.subregion,
+          maps: country.maps,
+          unMembership: country.unMember
         }))
     },
     groupedByContinent(){
@@ -43,6 +48,9 @@ getters: {
       acc[country.continent].push(country)
       return acc
     }, {});
+    },
+    filteredCountry(state){
+      return this.allCountries.find(country => country.name.toLowerCase() === state.selectedCountry.toLowerCase())
     }
 }
 })

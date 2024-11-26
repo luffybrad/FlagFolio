@@ -2,8 +2,8 @@
 import { RouterView } from 'vue-router'
 import {onMounted, ref } from 'vue'
 import { useCountryStore } from './stores/country';
-  const drawer = ref(true)
-  const open = ref(["Admin"])
+  const drawer = ref(false)
+  const open = ref(["Continents"])
   const countryStore = useCountryStore();
 
   onMounted(() => {
@@ -35,7 +35,8 @@ import { useCountryStore } from './stores/country';
         <v-divider></v-divider>
 
         <v-list density="compact" nav v-model:opened="open">
-          <v-list-item prepend-icon="mdi-earth" title="All Countries" value="home"></v-list-item>
+          <v-list-item
+          prepend-icon="mdi-earth" title="All Countries" value="home" to="/"></v-list-item>
 
           <v-list-group
           v-for="(countries, continent) in countryStore.groupedByContinent"
@@ -46,6 +47,7 @@ import { useCountryStore } from './stores/country';
             <v-list-item
               v-bind="props"
               :title="continent"
+              :key="continent"
             />
           </template>
           <v-list-item

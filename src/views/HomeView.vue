@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useCountryStore } from '@/stores/country';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const countryStore = useCountryStore()
+const model = ref(null)
+
 
 onMounted(() => {
   countryStore.fetchCountries()
@@ -41,7 +43,7 @@ onMounted(() => {
         v-slot="{ isSelected, toggle }"
       >
         <v-card
-          :class="['mx-2', selectedClass]"
+          class="mx-2"
           color="grey-lighten-2"
           width="200"
           @click="toggle"
@@ -66,7 +68,8 @@ onMounted(() => {
 
                   <v-card-actions>
                     <RouterLink
-
+                      :to="{name: 'about',params: {continent: continent, country: country.name}}"
+                      @click="countryStore.setSelectedCountry(country.name)"
                     >
                       <v-btn
                         class="ma-2 bg-primary"
