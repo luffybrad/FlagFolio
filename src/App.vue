@@ -2,9 +2,16 @@
 import { RouterView } from 'vue-router'
 import {onMounted, ref } from 'vue'
 import { useCountryStore } from './stores/country';
+
   const drawer = ref(false)
+
   const open = ref(["Continents"])
+
   const countryStore = useCountryStore();
+
+  const selectCountry = (countryName: string) => {
+    countryStore.setSelectedCountry(countryName)
+  }
 
   onMounted(() => {
     countryStore.fetchCountries()
@@ -18,6 +25,15 @@ import { useCountryStore } from './stores/country';
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-app-bar-title>FlagFolio</v-app-bar-title>
+
+
+      <v-spacer></v-spacer>
+
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+
     </v-app-bar>
 
     <v-navigation-drawer
@@ -50,11 +66,14 @@ import { useCountryStore } from './stores/country';
               :key="continent"
             />
           </template>
+
           <v-list-item
             v-for="country in countries"
-            :key="country.name"
-            :title="country.name"
-            :prepend-avatar="country.flag"
+            :key="country.name.common"
+            :title="country.name.common"
+            :prepend-avatar="country.flags.png"
+            :to="{name: 'about',params: {continent: continent, country: country.name.common}}"
+            @click="selectCountry(country.name.common)"
           />
           </v-list-group>
 

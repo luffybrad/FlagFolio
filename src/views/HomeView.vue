@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { useCountryStore } from '@/stores/country';
 import { onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import {getCardClass } from './utils'
+
 
 const countryStore = useCountryStore()
-const model = ref(null)
+const model = ref<string | null>(null)
+
+const selectCountry = (countryName: string) => {
+    countryStore.setSelectedCountry(countryName)
+  }
+
 
 
 onMounted(() => {
@@ -39,37 +47,35 @@ onMounted(() => {
     >
       <v-slide-group-item
         v-for="country in countries"
-        :key="country.name"
-        v-slot="{ isSelected, toggle }"
+        :key="country.name.common"
       >
         <v-card
           class="mx-2"
-          color="grey-lighten-2"
           width="200"
-          @click="toggle"
+          :class="getCardClass(continent)"
         >
           <v-img
             class="align-end"
             height="200"
-            :src="country.flag"
+            :src="country.flags.png"
             cover
           />
           <v-card-title
                     class="pt-4"
                   >
-                    {{ country.name }}
+                    {{ country.name.common }}
                   </v-card-title>
 
                   <v-card-text>
                     <div>
-                    Captial: {{ country.capital }}
+                    Capital: {{ country.capital? country.capital[0] : 'N/A' }}
                   </div>
                   </v-card-text>
 
                   <v-card-actions>
                     <RouterLink
-                      :to="{name: 'about',params: {continent: continent, country: country.name}}"
-                      @click="countryStore.setSelectedCountry(country.name)"
+                      :to="{name: 'about',params: {continent: continent, country: country.name.common}}"
+                      @click.prevent="selectCountry(country.name.common)"
                     >
                       <v-btn
                         class="ma-2 bg-primary"
