@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router'
 import {onMounted, ref, computed } from 'vue'
 import { useCountryStore } from './stores/country';
 import { RouterLink } from 'vue-router';
+import worldmapImg from '@/assets/worldmap.png'
 
   const drawer = ref(false)
 
@@ -73,7 +74,7 @@ const toggleSearchInput = () => {
       >
 
         <v-list-item
-        prepend-avatar="@/assets/worldmap.png"
+        :prepend-avatar="worldmapImg"
         title="Countries"
         subtitle="Wander Beyond Borders"
           nav
