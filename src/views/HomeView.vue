@@ -18,6 +18,7 @@ onMounted(() => {
 </script>
 
 <template>
+  <v-container>
         <v-row>
           <template
           v-for="(countries, continent) in countryStore.groupedByContinent"
@@ -58,7 +59,7 @@ onMounted(() => {
             cover
           />
           <v-card-title
-                    class="pt-4"
+                    class="pt-2"
                   >
                     {{ country.name.common }}
                   </v-card-title>
@@ -94,4 +95,5 @@ onMounted(() => {
   </v-col>
           </template>
         </v-row>
+      </v-container>
 </template>
