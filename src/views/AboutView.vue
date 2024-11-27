@@ -97,7 +97,7 @@ onMounted(()=> {
           size="x-small"
         >
           <div>
-            <a href="{{ countrySpecs.maps?.googleMaps }}" target="_blank" rel="noopener"
+            <a :href="countrySpecs.maps?.googleMaps" target="_blank" rel="noopener"
             class="font-weight-normal text-decoration-underline">
               Check it out on Google Maps
           </a>
