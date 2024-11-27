@@ -23,16 +23,26 @@ interface Country {
 interface CountryStoreState {
   countries: Country[];
   selectedCountry: string;
+  loading: boolean;
+  error: string | null
 }
 
 export const useCountryStore = defineStore('country', {
   state: (): CountryStoreState => ({
     countries: [],
-    selectedCountry: ""
+    selectedCountry: "",
+    loading: false,
+    error: null,
+
   }),
 
   actions: {
     async fetchCountries() {
+      if (this.loading || this.countries.length > 0) {
+        return; // Exit early to prevent repeated requests
+      }
+      this.loading = true;
+      this.error = null;
       try {
         // const response = await axios.get<Country[]>(`https://restcountries.com/v3.1/all`);
         const response = await fetch(`https://restcountries.com/v3.1/all`);
@@ -52,7 +62,10 @@ export const useCountryStore = defineStore('country', {
           unMember: country.unMember || false
         }));
       } catch (error) {
-        console.error(error);
+        this.error = "Failed to fetch countries. Please try again";
+        console.error("Error fetching countries:" + error);
+      }finally{
+        this.loading = false
       }
     },
 

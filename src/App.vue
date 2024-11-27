@@ -82,9 +82,41 @@ import { useCountryStore } from './stores/country';
 
       </v-navigation-drawer>
 
-    <v-main class="bg-grey-lighten-4">
-        <RouterView />
+    <v-main class="bg-grey-lighten-4 position-relative">
+    <!-- Show loading indicator -->
+    <div v-if="countryStore.loading" class="centered-overlay">
+        <v-progress-circular indeterminate color="primary" :size="128" :width="10" />
+        </div>
+
+<!-- Show error message -->
+<div v-if="countryStore.error" class="centered-overlay error-message">
+  <v-alert
+    :text="countryStore.error"
+    title="Error"
+    type="error"
+    density="compact"
+  ></v-alert>
+      </div>
+
+    <!-- Render RouterView only when not loading or showing an error -->
+    <RouterView v-if="!countryStore.loading && !countryStore.error" />
       </v-main>
   </v-app>
 </template>
 
+<style scoped>
+.centered-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.error-message{
+  width: auto;
+}
+
+</style>
