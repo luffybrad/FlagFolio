@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
 
 interface Flag {
   png: string;
@@ -35,9 +34,13 @@ export const useCountryStore = defineStore('country', {
   actions: {
     async fetchCountries() {
       try {
-        const response = await axios.get<Country[]>(`https://restcountries.com/v3.1/all`);
-
-         this.countries = response.data.map(country => ({
+        // const response = await axios.get<Country[]>(`https://restcountries.com/v3.1/all`);
+        const response = await fetch(`https://restcountries.com/v3.1/all`);
+        if(!response.ok){
+          throw new Error("error:" + response.status)
+        }
+        const data: Country[] = await response.json()
+         this.countries = data.map(country => ({
           name: { common: country.name.common },
           region: country.region,
           flags: { png: country.flags.png },

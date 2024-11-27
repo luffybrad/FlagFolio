@@ -12,8 +12,6 @@ const selectCountry = (countryName: string) => {
     countryStore.setSelectedCountry(countryName)
   }
 
-
-
 onMounted(() => {
   countryStore.fetchCountries()
 })
