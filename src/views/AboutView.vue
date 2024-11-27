@@ -1,22 +1,28 @@
 <script setup lang="ts">
 import { useCountryStore } from '@/stores/country';
-import { onMounted, computed } from 'vue';
-import {getCardClass } from './utils'
+import { onMounted, computed, onUpdated } from 'vue';
+import {getCardClass } from './utils';
 
+const props = defineProps<{
+  continent: string;
+  countryName: string;
+}>();
 
+const countryStore = useCountryStore();
 
-    const countryStore = useCountryStore();
-    const countrySpecs = computed(() => {
-  return countryStore.filteredCountry;
-    });
-    //change
+const countrySpecs = computed(() => {
+    return countryStore.filteredCountry;
+});
+//change
 
+onUpdated(() => {
+  countryStore.setSelectedCountry(props.countryName)
+});
 
-
-    onMounted(()=> {
-      countryStore.fetchCountries()
-    })
-
+onMounted(()=> {
+  countryStore.fetchCountries()
+  countryStore.setSelectedCountry(props.countryName)
+});
 
 </script>
 

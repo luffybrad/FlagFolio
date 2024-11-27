@@ -1,13 +1,28 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import {onMounted, ref } from 'vue'
+import {onMounted, ref, computed } from 'vue'
 import { useCountryStore } from './stores/country';
+import { RouterLink } from 'vue-router';
 
   const drawer = ref(false)
 
   const open = ref(["Continents"])
 
   const countryStore = useCountryStore();
+
+  const searchInputVisible = ref(false); // Track visibility of the search input
+  const searchQuery = ref<string>(""); // Track the user's search query
+
+  const filteredCountries = computed(() => {
+  // Filter countries based on the search query
+  return countryStore.countries.filter(country =>
+    country.name.common.toLowerCase().includes(searchQuery.value.toLowerCase())
+  ).slice(0, 10);
+});
+
+
+
+
 
   const selectCountry = (countryName: string) => {
     countryStore.setSelectedCountry(countryName)
@@ -16,6 +31,14 @@ import { useCountryStore } from './stores/country';
   onMounted(() => {
     countryStore.fetchCountries()
   })
+
+  // Toggle search input visibility
+const toggleSearchInput = () => {
+  searchInputVisible.value = !searchInputVisible.value;
+  if (!searchInputVisible.value) {
+    searchQuery.value = ""; // Clear search query when hiding input
+  }
+};
 </script>
 
 <template>
@@ -29,10 +52,18 @@ import { useCountryStore } from './stores/country';
 
       <v-spacer></v-spacer>
 
-        <v-btn icon>
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
+         <!-- Toggle between input field and magnifying icon -->
+      <v-btn icon @click="toggleSearchInput">
+        <v-icon>{{ searchInputVisible ? 'mdi-close' : 'mdi-magnify' }}</v-icon>
+      </v-btn>
 
+      <!-- Search Input Field -->
+      <v-text-field
+        v-if="searchInputVisible"
+        v-model="searchQuery"
+        label="Search"
+        clearable
+      ></v-text-field>
 
     </v-app-bar>
 
@@ -100,6 +131,22 @@ import { useCountryStore } from './stores/country';
 
     <!-- Render RouterView only when not loading or showing an error -->
     <RouterView v-if="!countryStore.loading && !countryStore.error" />
+
+           <!-- Suggestions List -->
+           <div v-if="searchInputVisible && filteredCountries.length > 0" class="suggestions-list">
+        <ul>
+          <li v-for="country in filteredCountries" :key="country.name.common">
+            <RouterLink
+            :to="{ name: 'about', params: { continent: country.region, country: country.name.common } }
+            "
+            @click = "selectCountry(country.name.common)"
+            >
+              {{ country.name.common }}
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
+
       </v-main>
   </v-app>
 </template>
@@ -118,5 +165,28 @@ import { useCountryStore } from './stores/country';
 .error-message{
   width: auto;
 }
+.suggestions-list {
+  position: absolute; /* Position it relative to its parent */
+  top: 60px; /* Adjust based on your layout */
+  right: 20px; /* Adjust based on your layout */
+  background-color: grey; /* Background for better visibility */
+  text-decoration-line: none;
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.1); /* Shadow for depth */
+}
 
+.suggestions-list ul {
+  list-style-type: none; /* Remove default list styling */
+}
+
+.suggestions-list li {
+  padding: 8px; /* Padding for each suggestion */
+  color: black;
+
+
+}
+
+.suggestions-list li:hover {
+  background-color: #f5f5f5; /* Highlight on hover */
+}
 </style>

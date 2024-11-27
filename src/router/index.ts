@@ -13,7 +13,11 @@ const router = createRouter({
     {
       path: '/:continent/:country',
       name: 'about',
-      component: AboutView
+      component: AboutView,
+      props: ({ params }) => ({
+        continent: Array.isArray(params.continent) ? params.continent[0] : params.continent,
+        countryName: Array.isArray(params.country) ? params.country[0] : params.country,
+      })
     },
   ],
 })
