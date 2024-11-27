@@ -181,12 +181,13 @@ const toggleSearchInput = () => {
 
 .suggestions-list li {
   padding: 8px; /* Padding for each suggestion */
-  color: black;
-
-
+}
+.suggestions-list li a {
+  color: white;
+  text-decoration: none;
 }
 
 .suggestions-list li:hover {
-  background-color: #f5f5f5; /* Highlight on hover */
+  background-color: black; /* Highlight on hover */
 }
 </style>
