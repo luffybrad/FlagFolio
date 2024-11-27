@@ -18,7 +18,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-container>
         <v-row>
           <template
           v-for="(countries, continent) in countryStore.groupedByContinent"
@@ -39,7 +38,7 @@ onMounted(() => {
   >
     <v-slide-group
       v-model="model"
-      class="pa-4"
+      class=""
       selected-class="bg-success"
       show-arrows
     >
@@ -49,12 +48,12 @@ onMounted(() => {
       >
         <v-card
           class="mx-2"
-          width="200"
+          width="150"
           :class="getCardClass(continent)"
         >
           <v-img
             class="align-end"
-            height="200"
+            height="100"
             :src="country.flags.png"
             cover
           />
@@ -95,5 +94,4 @@ onMounted(() => {
   </v-col>
           </template>
         </v-row>
-      </v-container>
 </template>
