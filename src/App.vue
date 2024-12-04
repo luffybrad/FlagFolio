@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import {onMounted, ref, computed } from 'vue'
+import { RouterView, useRouter } from 'vue-router'
+import {onMounted, ref, computed, onUpdated } from 'vue'
 import { useCountryStore } from './stores/country';
-import { RouterLink } from 'vue-router';
 import worldmapImg from '@/assets/worldmap.png'
+import { useAuthStore } from './stores/auth';
 
   const drawer = ref(false)
 
   const open = ref(["Continents"])
 
   const countryStore = useCountryStore();
+  const router = useRouter()
+
+  const authStore = useAuthStore();
+  const isAuthenticated = computed(() =>
+    authStore.isAuthenticated()
+  )
+  const logout = () => {
+   authStore.signout();
+   router.push('/login')
+  };
 
   const searchInputVisible = ref(false); // Track visibility of the search input
   const searchQuery = ref<string>(""); // Track the user's search query
@@ -28,6 +38,10 @@ import worldmapImg from '@/assets/worldmap.png'
   const selectCountry = (countryName: string) => {
     countryStore.setSelectedCountry(countryName)
   }
+
+  onUpdated(() => {
+    authStore.checkTokenExpiration()
+  })
 
   onMounted(() => {
     countryStore.fetchCountries()
@@ -53,6 +67,7 @@ const toggleSearchInput = () => {
 
       <v-spacer></v-spacer>
 
+
          <!-- Toggle between input field and magnifying icon -->
       <v-btn icon @click="toggleSearchInput">
         <v-icon>{{ searchInputVisible ? 'mdi-close' : 'mdi-magnify' }}</v-icon>
@@ -65,6 +80,33 @@ const toggleSearchInput = () => {
         label="Search"
         clearable
       ></v-text-field>
+
+      <!-- Display username if authenticated -->
+      <v-btn
+       v-if="isAuthenticated"
+      prepend-icon="mdi-account-circle"
+      size="x-small"
+      variant="outlined"
+      rounded
+      color="success"
+      >
+        {{authStore.username}}
+        </v-btn>
+
+
+
+
+      <v-btn
+       v-if="isAuthenticated"
+      @click="logout"
+      size="small"
+      color="error"
+      variant="text"
+      rounded
+      icon="mdi-logout"
+      ></v-btn>
+
+
 
     </v-app-bar>
 
@@ -115,6 +157,17 @@ const toggleSearchInput = () => {
       </v-navigation-drawer>
 
     <v-main class="bg-grey-lighten-4 position-relative">
+
+
+      <!-- Alert for messages -->
+      <v-alert v-if="authStore.alertVisible" :type="authStore.alertType" :icon="authStore.alertIcon" dismissible
+      variant="outlined"
+      >
+         {{ authStore.alertMessage }}
+       </v-alert>
+
+
+
     <!-- Show loading indicator -->
     <div v-if="countryStore.loading" class="centered-overlay">
         <v-progress-circular indeterminate color="primary" :size="128" :width="10" />
@@ -135,17 +188,29 @@ const toggleSearchInput = () => {
 
            <!-- Suggestions List -->
            <div v-if="searchInputVisible && filteredCountries.length > 0" class="suggestions-list">
-        <ul>
-          <li v-for="country in filteredCountries" :key="country.name.common">
-            <RouterLink
+
+        <v-list density="compact" rounded bg-color="grey-lighten-1"
+        base-color="blue-darken-4"
+        color="orange-accent-4">
+          <v-list-item
+          v-for="country in filteredCountries"
+          :key="country.name.common"
+          tile
+          :title="country.name.common"
+          prepend-icon="mdi-map-search"
+          density="compact"
+          router :to="{ name: 'about', params: { continent: country.region, country: country.name.common } }"
+          @click.prevent.stop = "selectCountry(country.name.common)"
+          >
+          <!-- <RouterLink
             :to="{ name: 'about', params: { continent: country.region, country: country.name.common } }
             "
             @click = "selectCountry(country.name.common)"
             >
-              {{ country.name.common }}
-            </RouterLink>
-          </li>
-        </ul>
+            {{ country.name.common }}
+            </RouterLink> -->
+          </v-list-item>
+        </v-list>
       </div>
 
       </v-main>
@@ -170,25 +235,9 @@ const toggleSearchInput = () => {
   position: absolute; /* Position it relative to its parent */
   top: 60px; /* Adjust based on your layout */
   right: 20px; /* Adjust based on your layout */
-  background-color: grey; /* Background for better visibility */
+  background-color: aqua;
   text-decoration-line: none;
   border-radius: 4px; /* Rounded corners */
   box-shadow: 0px 2px 10px rgba(0,0,0,0.1); /* Shadow for depth */
-}
-
-.suggestions-list ul {
-  list-style-type: none; /* Remove default list styling */
-}
-
-.suggestions-list li {
-  padding: 8px; /* Padding for each suggestion */
-}
-.suggestions-list li a {
-  color: white;
-  text-decoration: none;
-}
-
-.suggestions-list li:hover {
-  background-color: black; /* Highlight on hover */
 }
 </style>

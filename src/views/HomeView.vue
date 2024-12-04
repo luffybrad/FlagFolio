@@ -65,9 +65,7 @@ onMounted(() => {
                   </v-card-title>
 
                   <v-card-text>
-                    <div>
                     Capital: {{ country.capital? country.capital[0] : 'N/A' }}
-                  </div>
                   </v-card-text>
 
                   <v-card-actions>
@@ -76,15 +74,17 @@ onMounted(() => {
                       @click.prevent="selectCountry(country.name.common)"
                     >
                       <v-btn
-                        class="ma-2 bg-primary"
-                        color="white"
+                        class="ma-2"
                         rounded
-                      >
+                        size="small"
+                        variant="outlined"
+                        append-icon="mdi-eye"
+                        color="grey-darken-4"
+                        link
+                        :to="{name: 'about',params: {continent: continent, country: country.name.common}}"
+                      @click.prevent="selectCountry(country.name.common)"
+                    >
                         Explore
-                        <v-icon
-                          icon="mdi-eye"
-                          end
-                        />
                       </v-btn>
                     </RouterLink>
                   </v-card-actions>
