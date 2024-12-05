@@ -1,5 +1,9 @@
 import { defineStore } from 'pinia';
 
+
+const api = 'https://wren-wealthy-minnow.ngrok-free.app'
+
+
 interface AuthState {
   token: string | null; // JWT token
   username: string | null
@@ -19,9 +23,12 @@ export const useAuthStore = defineStore('auth', {
     alertType: undefined,
     alertIcon: '',
   }),
+
+
+
   actions: {
     async signup(username: string, password: string) {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch(api+'/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +52,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async signin(username: string, password: string) {
-      const response = await fetch('http://localhost:5000/signin', {
+      const response = await fetch(api+'/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }), // Send username and password
@@ -67,7 +74,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async forgotPassword(username:string){
-        const response = await fetch('http://localhost:5000/forgot-password', {
+        const response = await fetch(api+'/forgot-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
