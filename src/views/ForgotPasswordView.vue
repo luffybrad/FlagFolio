@@ -6,19 +6,18 @@ import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
 const router = useRouter();
-const userName = ref('');
+const email = ref('');
 
 
 // Function to handle form submission
-const handleForgotPassword = async () => {
+const handleSubmit = async () => {
   try {
-    // Call signup method from auth store
-    await authStore.forgotPassword(userName.value);
-    console.log('Username registered successfully:', userName.value); // Log success message or handle successful signup
-    router.push({ name: 'home'})
-    // Optionally, redirect or show a success message here
+    await authStore.forgotPassword(email.value);
+    console.log('Reset link sent successfully');
+    // Optionally redirect or show a success message
+    router.push({ name: 'Login' });
   } catch (error) {
-    console.error('Error during signup:', error); // Log any errors during signup
+    console.error(error);
   }
 };
 </script>
@@ -31,10 +30,10 @@ const handleForgotPassword = async () => {
         <v-card class="elevation-8">
           <v-card-title class="headline">Forgot Password</v-card-title>
           <v-card-text>
-            <v-form @submit.prevent="handleForgotPassword">
+            <v-form @submit.prevent="handleSubmit">
               <v-text-field
-                v-model="userName"
-                label="Enter your username"
+                v-model="email"
+                label="Enter your email"
                 required
               ></v-text-field>
               <v-btn class="mb-5" variant="elevated" color="primary" type="submit">Send Reset Link</v-btn>

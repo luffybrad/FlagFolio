@@ -49,7 +49,7 @@ const handleSubmit = async () => {
               </RouterLink>
               <br>
               <RouterLink :to="{ name: 'Forgotpassword'}">
-                <v-btn size="x-small" color="warning" variant="text" >Forgot passowrd?!</v-btn>
+                <v-btn size="x-small" color="warning" variant="text" >Forgot password?!</v-btn>
               </RouterLink>
             </v-form>
           </v-card-text>

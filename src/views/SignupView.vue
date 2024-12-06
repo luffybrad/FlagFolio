@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'; // Import the auth store
 
 const userName = ref('');
 const passWord = ref('');
+const email = ref('');
 const router = useRouter();
 const authStore = useAuthStore(); // Initialize the auth store
 
@@ -12,12 +13,12 @@ const authStore = useAuthStore(); // Initialize the auth store
 const handleSubmit = async () => {
   try {
     // Call signup method from auth store
-    await authStore.signup(userName.value, passWord.value);
+    await authStore.signup(userName.value, passWord.value, email.value);
     console.log('User signed up successfully:', userName.value); // Log success message or handle successful signup
     router.push( { name: 'Login' })
     // Optionally, redirect or show a success message here
   } catch (error) {
-    console.error('Error during signup:', error); // Log any errors during signup
+    console.error( error); // Log any errors during signup
   }
 };
 </script>
@@ -33,6 +34,12 @@ const handleSubmit = async () => {
               <v-text-field
                 v-model="userName"
                 label="Username"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="email"
+                label="Email"
+                type="email" 
                 required
               ></v-text-field>
               <v-text-field

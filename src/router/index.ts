@@ -6,6 +6,7 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import { useAuthStore } from '@/stores/auth'
 import SignupView from '@/views/SignupView.vue'
 import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
+import ResetPasswordView from '@/views/ResetPasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +57,11 @@ const router = createRouter({
       component: ForgotPasswordView
     },
     {
+      path: '/resetPassword',
+      name: 'ResetPasswword',
+      component: ResetPasswordView
+    },
+    {
       path: '/:catchAll(.*)',
       name: 'NotFound',
       component: NotFoundView
@@ -70,7 +76,7 @@ const router = createRouter({
 
     authStore.checkTokenExpiration();
 
-    if(!authStore.isAuthenticated() && to.path !== '/login' && to.path !== '/signup' && to.path !=='/forgotPassword'){
+    if(!authStore.isAuthenticated() && to.path !== '/login' && to.path !== '/signup' && to.path !=='/forgotPassword' && to.path !== '/resetPassword'){
       return next({ name: 'Login'});
     }
 

@@ -7,6 +7,7 @@ const api = 'https://wren-wealthy-minnow.ngrok-free.app'
 interface AuthState {
   token: string | null; // JWT token
   username: string | null
+  email: string | null
 
   alertVisible: boolean; // To control alert visibility
   alertMessage: string; // Message to display in alert
@@ -16,8 +17,10 @@ interface AuthState {
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
+    //initialize credentials from localstorage
     token: localStorage.getItem('token') || null,
     username: localStorage.getItem('username') || null,
+    email: localStorage.getItem('email') || null,
     alertVisible: false,
     alertMessage: '',
     alertType: undefined,
@@ -27,13 +30,13 @@ export const useAuthStore = defineStore('auth', {
 
 
   actions: {
-    async signup(username: string, password: string) {
+    async signup(username: string, password: string, email: string) {
       const response = await fetch(api+'/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }), // Send username and password
+        body: JSON.stringify({ username, password, email }), // Send username, password, email
       });
 
       if (!response.ok) {
@@ -47,6 +50,7 @@ export const useAuthStore = defineStore('auth', {
       this.username = username
       localStorage.setItem('token', this.token as string);
       localStorage.setItem('username', this.username)
+      localStorage.setItem('email', this.email as string)
       this.showAlert('Signed up successfully!', 'success','$success', 3000)
       return data;
     },
@@ -69,24 +73,44 @@ export const useAuthStore = defineStore('auth', {
       this.username = username
       localStorage.setItem('token', this.token as string);
       localStorage.setItem('username', this.username)
+      localStorage.setItem('email', this.email as string)
       this.showAlert('Signed in successfully!', 'success','$success', 3000)
       return data;
     },
 
-    async forgotPassword(username:string){
-        const response = await fetch(api+'/forgot-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username }),
-        });
+    async forgotPassword(email:string) { // Accept email as parameter
+      const response = await fetch(api + '/forgotPassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }), // Send email for reset link
+      });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          this.showAlert(errorData.message || 'Failed to send reset link!', 'error', '$error', 3000);
-          throw new Error(errorData.message || 'Failed to send reset link');
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        this.showAlert(errorData.message || 'Failed to send reset link!', 'error', '$error', 3000);
+        throw new Error(errorData.message || 'Failed to send reset link');
+      }
+      this.showAlert('Reset link sent! Check your email.', 'success', '$success', 3000);
+    },
+
+    async resetPassword(token:string, email:string, newPassword:string) { // Accept token, email, and new password as parameters
+      const response = await fetch(api + '/resetPassword', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ token, email, newPassword }), // Send token and new password for resetting
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        this.showAlert(errorData.message || 'Failed to reset password!', 'error', '$error', 3000);
+        throw new Error(errorData.message || 'Failed to reset password');
+      }
+
+      this.showAlert('Password has been successfully updated.', 'success', '$success', 3000);
     },
 
 
@@ -95,6 +119,7 @@ export const useAuthStore = defineStore('auth', {
       this.username = null
       localStorage.removeItem('token')
       localStorage.removeItem('username')
+      localStorage.removeItem('email')
       this.showAlert('Signed out successfully!', 'warning', '$warning', 3000);
     },
 
