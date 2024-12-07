@@ -59,7 +59,8 @@ const router = createRouter({
     {
       path: '/resetPassword',
       name: 'ResetPasswword',
-      component: ResetPasswordView
+      component: ResetPasswordView,
+      props: true
     },
     {
       path: '/:catchAll(.*)',
