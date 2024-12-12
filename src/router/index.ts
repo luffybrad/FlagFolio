@@ -60,7 +60,10 @@ const router = createRouter({
       path: '/resetPassword/:token/:email',
       name: 'ResetPassword',
       component: ResetPasswordView,
-      props: true
+      props: ({ params }) => ({
+        token: Array.isArray(params.token) ? params.token[0] : params.token,
+        email: Array.isArray(params.email) ? params.email[0] : params.email,
+      })
     },
     {
       path: '/:catchAll(.*)',

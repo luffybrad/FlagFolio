@@ -5,7 +5,10 @@ import { useAuthStore } from '@/stores/auth';
 import { useRoute, useRouter } from 'vue-router';
 
 
-
+const props = defineProps<{
+  token: string;
+  email: string;
+}>();
 
 const newPassword = ref('');
 const confirmPassword = ref('');
@@ -13,15 +16,18 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
+
 const handleSubmit = async () => {
   const token = route.params.token;
   const email = route.params.email;
 
 
   if (newPassword.value !== confirmPassword.value) {
-
+    console.log(props.token)
+    console.log(props.email)
     authStore.showAlert("Passwords do not match!", 'error', '$error', 3000)
     return;
+
   }
 
   try {
