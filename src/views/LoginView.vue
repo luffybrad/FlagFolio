@@ -48,7 +48,7 @@ const handleSubmit = async () => {
                 <v-btn size="x-small" color="info" variant="text" >Create account?</v-btn>
               </RouterLink>
               <br>
-              <RouterLink :to="{ name: 'Forgotpassword'}">
+              <RouterLink :to="{ name: 'ForgotPassword'}">
                 <v-btn size="x-small" color="warning" variant="text" >Forgot password?!</v-btn>
               </RouterLink>
             </v-form>
