@@ -57,8 +57,8 @@ const router = createRouter({
       component: ForgotPasswordView
     },
     {
-      path: '/resetPassword',
-      name: 'ResetPasswword',
+      path: '/resetPassword/:token/:email',
+      name: 'ResetPassword',
       component: ResetPasswordView,
       props: true
     },
@@ -77,7 +77,7 @@ const router = createRouter({
 
     authStore.checkTokenExpiration();
 
-    if(!authStore.isAuthenticated() && to.path !== '/login' && to.path !== '/signup' && to.path !=='/forgotPassword' && to.path !== '/resetPassword'){
+    if(!authStore.isAuthenticated() && to.path !== '/login' && to.path !== '/signup' && to.path !=='/forgotPassword' && to.name !== 'ResetPassword'){
       return next({ name: 'Login'});
     }
 

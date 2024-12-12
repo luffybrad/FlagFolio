@@ -95,13 +95,13 @@ export const useAuthStore = defineStore('auth', {
       this.showAlert('Reset link sent! Check your email.', 'success', '$success', 3000);
     },
 
-    async resetPassword(token:string, email:string, newPassword:string) { // Accept token, email, and new password as parameters
+    async resetPassword(token:string, email:string, password:string) { // Accept token, email, and new password as parameters
       const response = await fetch(api + '/resetPassword', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json' 
         },
-        body: JSON.stringify({ token, email, newPassword }), // Send token and new password for resetting
+        body: JSON.stringify({ token, email, password }), // Send token and new password for resetting
       });
 
       if (!response.ok) {
