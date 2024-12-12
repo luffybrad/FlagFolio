@@ -50,7 +50,7 @@ const handleSubmit = async () => {
       <v-row align="center" style="height: 100vh" no-gutters>
         <v-col>
           <v-card class="elevation-8">
-            <v-card-title class="headline">Reset Password</v-card-title>
+            <v-card-title class="headline">Reset Password for {{ $route.params.email}}</v-card-title>
             <v-card-text>
               <v-form @submit.prevent="handleSubmit">
                 <v-text-field

@@ -9,6 +9,12 @@ import { useAuthStore } from './stores/auth';
 
   const open = ref(["Continents"])
 
+  const items = ref([
+        { title: 'Profile' },
+        { title: 'Delete account' }
+      ],
+  )
+
   const countryStore = useCountryStore();
   const router = useRouter()
 
@@ -82,16 +88,34 @@ const toggleSearchInput = () => {
       ></v-text-field>
 
       <!-- Display username if authenticated -->
-      <v-btn
-       v-if="isAuthenticated"
+
+      <v-menu
+      open-on-hover
+    >
+      <template v-slot:activator="{ props }">
+        <v-btn
+        v-if="isAuthenticated"
       prepend-icon="mdi-account-circle"
       size="x-small"
       variant="outlined"
       rounded
       color="success"
-      >
-        {{authStore.username}}
+          v-bind="props"
+        >
+          {{ authStore.username }}
         </v-btn>
+      </template>
+
+      <v-list>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
 
 
 
