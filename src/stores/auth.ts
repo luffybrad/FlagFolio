@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 
 // const api = 'https://wren-wealthy-minnow.ngrok-free.app'
-const api = 'https://flagfolio-backend.vercel.app/'
+const api = 'https://flagfolio-backend.vercel.app'
 
 interface AuthState {
   token: string | null; // JWT token
@@ -98,8 +98,8 @@ export const useAuthStore = defineStore('auth', {
     async resetPassword(token:string, email:string, password:string) { // Accept token, email, and new password as parameters
       const response = await fetch(api + '/resetPassword', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ token, email, password }), // Send token and new password for resetting
       });
