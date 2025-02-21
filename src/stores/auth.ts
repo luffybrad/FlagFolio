@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 
 
-const api = 'https://wren-wealthy-minnow.ngrok-free.app'
-
+// const api = 'https://wren-wealthy-minnow.ngrok-free.app'
+const api = 'https://flagfolio-backend.vercel.app/'
 
 interface AuthState {
   token: string | null; // JWT token
